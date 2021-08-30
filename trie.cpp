@@ -44,5 +44,6 @@ struct trie{
 };
 
 int main(){
+    input();
     return 0;
 }
