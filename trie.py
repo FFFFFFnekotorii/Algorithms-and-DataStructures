@@ -3,7 +3,7 @@ class node:
         self.term = 0
         self.to = [-1] * 26
  
-class trie:
+class Trie:
     def __init__(self):
         self.root = node()
     def add(self, s):
