@@ -26,7 +26,7 @@ struct node{
     node* to[26];
 };
 
-struct trie{
+struct Trie{
     node* root = new node();
 
     void add(string s){
