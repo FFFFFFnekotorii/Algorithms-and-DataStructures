@@ -94,19 +94,7 @@ def fact(n):
     return F + [n]
 
 def main():
-    c = int(get())
-    r = int(pow(c, 0.5))
-    if(r * r == c):
-        put(r // 2 + 1)
-    else:
-        f = fact(c)
-        d = dict()
-        for i in f:
-            d[i] = 0
-        for i in f:
-            d[i] += 1
-        r = 1
-        for i in d:
-            r *= pow(i, d[i] // 2)
-        put(r // 2 + 1)
+    n = int(input())
+    f = fact(n)
+    print(n)
 main()
