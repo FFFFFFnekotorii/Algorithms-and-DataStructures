@@ -96,5 +96,5 @@ def fact(n):
 def main():
     n = int(input())
     f = fact(n)
-    print(n)
+    print(f)
 main()
