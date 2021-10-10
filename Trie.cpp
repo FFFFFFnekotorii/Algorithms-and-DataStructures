@@ -1,6 +1,3 @@
-#pragma GCC optimize("O3")
-#pragma GCC target("avx2")
-
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -17,8 +14,6 @@
 using namespace std;
 
 typedef long long int ll;
-
-ll inf = 1000000007;
 
 struct node{
     ll term = 0;
