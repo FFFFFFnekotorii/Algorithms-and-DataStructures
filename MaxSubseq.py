@@ -1,20 +1,3 @@
-from sys import stdout
-from sys import stdin
-def get():
-    return stdin.readline().strip()
-def getf(sp = " "):
-    return [int(i) for i in get().split(sp)]
-def put(a, end = "\n"):
-    stdout.write(str(a) + end)
-def putf(a, sep = " ", end = "\n"):
-    stdout.write(sep.join([str(i) for i in a]) + end)
-     
-#from collections import defaultdict as dd, deque
-#from random import randint, shuffle, sample
-#from functools import cmp_to_key, reduce
-#from math import factorial as fac, acos, asin, atan2, gcd, log, e
-#from bisect import bisect_right as br, bisect_left as bl, insort
-
 class multiset:
     def __init__(self):
         self.d = dict()
@@ -42,8 +25,8 @@ class multiset:
 
 #ans[i] : max sum of k elements in [0 : i]
 def main():
-    n, k = getf()
-    a = getf()
+    n, k = 5, 3
+    a = [1, 2, -3, 4, 5]
     cnt = multiset()
     ans = [None] * n
     ans[0] = a[0]
@@ -53,7 +36,7 @@ def main():
         cur_sum += a[i]
         cnt.insert(a[i])
         ans[i] = cur_sum
-    putf(ans)
+    print(ans)
     for i in range(k, n):
         m = cnt.min()
         if(a[i] > m):
@@ -62,5 +45,5 @@ def main():
             cnt.insert(a[i])
             cnt.erase(m)
         ans[i] = cur_sum
-    putf(ans)
+    print(ans)
 main()
