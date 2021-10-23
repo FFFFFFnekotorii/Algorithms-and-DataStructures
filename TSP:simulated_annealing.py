@@ -33,8 +33,6 @@ def rnd():
 def psi(n):
     i = randint(0, n - 1)
     j = randint(0, n - 1)
-    if(i == j):
-        return psi(n)
     return (i, j)
 
 def exp(n):
@@ -45,6 +43,7 @@ def solve(n, d):
     p = [i for i in range(n)]
     t = 1.0
     gamma = 0.95
+    ans = cost(n, p, dist)
     for k in range(500):
         t *= gamma
         tmp = p.copy()
@@ -52,14 +51,17 @@ def solve(n, d):
         a, b = change
         tmp[a], tmp[b] = tmp[b], tmp[a]
         #print(tmp)
-        f1 = cost(n, p, dist)
-        f2 = cost(n, tmp, dist)
-        if(f2 < f1):
-            r = exp((f1 - f2) / t)
+        val = cost(n, tmp, dist)
+        if(ans > val):
+            ans = val
+            p = tmp.copy()
+        else:
+            r = exp((ans - val) / t)
             if(r > rnd()):
                 p = tmp.copy()
+                ans = val
     #print(p)
-    return cost(n, p, dist)
+    return ans
 
 def main():
     t = int(get())
