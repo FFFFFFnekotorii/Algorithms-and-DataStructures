@@ -18,6 +18,9 @@ typedef long long int ll;
 struct mod_query{
 
     ll type = 0, val = 0;
+    // type = 0 => nothing to do
+    // type = 1 => add val
+    // type = 2 => set val
 
 };
 
