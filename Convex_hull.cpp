@@ -72,7 +72,7 @@ vector<Point> upper_envelope_hull(vector<Point> &q){
     return st;
 }
 
-vector<Point> convex_hull(const vector<Point> &p){
+vector<Point> build_convex_hull(const vector<Point> &p){
     ll n = p.size(), i, a, b;
     a = 0;
     b = n - 1;
@@ -121,13 +121,29 @@ vector<Point> convex_hull(const vector<Point> &p){
 
 int main(){
     input();
-    ll c, i, n;
+    ll c, i, n, k;
     cin >> n;
     vector<Point> p(n);
     for(i = 0; i < n; i++){
         cin >> p[i].x >> p[i].y;
         p[i].ind = i;
     }
-    vector<Point> unordered_convex_hull = convex_hull(p);
+    vector<Point> unordered_convex_hull = build_convex_hull(p);
+    vector<bool> included(n, false);
+    for(Point pt : unordered_convex_hull){
+        included[pt.ind] = true;
+    }
+    k = 0;
+    vector<Point> convex_hull;
+    for(i = 0; i < n; i++){
+        if(included[i] == true){
+            k++;
+            convex_hull.push_back(p[i]);
+        }
+    }
+    cout << k << "\n";
+    for(i = 0; i < k; i++){
+        cout << convex_hull[i].x << " " << convex_hull[i].y << "\n";
+    }
     return 0;
 }
