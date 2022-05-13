@@ -17,31 +17,38 @@ def putf(a, sep = " ", end = "\n"):
 
 MOD = 10 ** 9 + 7
 
-class Matrix:
+class Matrix2D:
     def __init__(self, n, m):
-        self.M = [[0 for j in range(m)] for i in range(n)]
+        self.matrix = [[0 for j in range(m)] for i in range(n)]
         self.size = (n, m)
  
     def __repr__(self):
-        return "\n".join(["[" + " ".join([str(j) for j in i]) + "]" for i in self.M])
+        return "\n".join(["|" + " ".join([str(j) for j in i]) + "|" for i in self.matrix])
  
     def fill(self, arr):
         n, m = self.size
+        for i in range(min(n, len(arr))):
+            for j in range(min(m, len(arr[i]))):
+                self.matrix[i][j] = arr[i][j] % MOD
+
+    def unsafe_fill(self, arr):
+        n, m = self.size
         for i in range(n):
             for j in range(m):
-                self.M[i][j] = arr[i][j] % MOD
+                self.matrix[i][j] = arr[i][j] % MOD
  
     def __add__(self, other):
         if(self.size != other.size):
             put("---error---")
-            put("cant size(%d, %d) add to size(%d, %d)" % (self.size[0], self.size[1], other.size[0], other.size[1]))
+            put("can not Matrix(%d, %d) add to Matrix(%d, %d)" % (self.size[0], self.size[1], other.size[0], other.size[1]))
             put("-----------")
-        else:
-            n, m = self.size
-            for i in range(n):
-                for j in range(m):
-                    self.M[i][j] += other.M[i][j]
-                    self.M[i][j] %= MOD
+            return None
+        
+        n, m = self.size
+        for i in range(n):
+            for j in range(m):
+                self.matrix[i][j] += other.matrix[i][j]
+                self.matrix[i][j] %= MOD
         return self
  
     def __mul__(self, other):
@@ -49,16 +56,17 @@ class Matrix:
         k2, m = other.size
         if(k1 != k2):
             put("---error---")
-            put("cant size(%d, %d) multiply by size(%d, %d)" % (self.size[0], self.size[1], other.size[0], other.size[1]))
+            put("cant Matrix(%d, %d) multiply by Matrix(%d, %d)" % (self.size[0], self.size[1], other.size[0], other.size[1]))
             put("-----------")
-        else:
-            c = Matrix(n, m)
-            for i in range(n):
-                for j in range(m):
-                    for k in range(k1):
-                        c.M[i][j] += self.M[i][k] * other.M[k][j]
-                        c.M[i][j] %= MOD
-            return c
+            return None
+        
+        c = Matrix2D(n, m)
+        for i in range(n):
+            for j in range(m):
+                for k in range(k1):
+                    c.matrix[i][j] += self.matrix[i][k] * other.matrix[k][j]
+                    c.matrix[i][j] %= MOD
+        return c
 
     def __pow__(self, n):
         if(n == 1):
@@ -69,12 +77,10 @@ class Matrix:
         return self * pow(self, n - 1)
 
 def main():
-    p = Matrix(2, 2)
-    p.fill([[0, 1], [1, 1]])
-    #print(p)
-    #print(pow(p, 2))
-    a = Matrix(1, 2)
-    a.fill([[0, 1]])
-    print(a)
-    print(a * pow(p, 5))
+    p = Matrix2D(2, 2)
+    p.unsafe_fill([[2, 1], [1, 4]])
+    a = Matrix2D(1, 2)
+    a.unsafe_fill([[1, 1]])
+    a1 = a * pow(p, 5)
+    put(a1)
 main()
