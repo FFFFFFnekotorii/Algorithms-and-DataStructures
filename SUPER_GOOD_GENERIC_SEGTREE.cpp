@@ -198,7 +198,7 @@ struct segment_tree {
     }
 
     void update(ll ind, ll new_val) {
-        add(0, 0, tree.size() >> 2, ind, new_val);
+        update(0, 0, tree.size() >> 2, ind, new_val);
     }
 };
 
