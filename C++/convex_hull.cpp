@@ -1,149 +1,187 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <string>
-#include <cmath>
-#include <set>
-#include <cstring>
-#include <deque>
+#include <sstream>
 #include <map>
+#include <set>
+#include <unordered_set>
+#include <unordered_map>
+#include <algorithm>
+#include <cmath>
+#include <deque>
+#include <fstream>
+#include <bitset>
+#include <random>
 
-#define iter vector<long long int>::iterator
-#define input() ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+#include <chrono>
+#include <cassert>
 
 using namespace std;
 
 typedef long long int ll;
+typedef long double ld;
 
-struct Point{
-    ll x, y, ind = -1;
+#define    INF 1000000007
+#define  INF64 1000000000000000003LL
+#define    LMT 1000000
+#define  INPUT ios::sync_with_stdio(false); cin.tie(0);
+
+#define    FST first
+#define    SND second
+
+#define    MOD 998244353LL
+
+#ifdef LOCAL
+    #define cout cerr
+#endif
+
+template<typename T>
+struct point {
+    T x, y;
+
+    point() {}
+
+    point(T x0, T y0) {
+        x = x0;
+        y = y0;
+    }
+
+    point operator+(const point& other) {
+        return point(x + other.x, y + other.y);
+    }
+
+    point operator-(const point& other) {
+        return point(x - other.x, y - other.y);
+    }
+
+    point operator*(const T& k) {
+        return point(x * k, y * k);
+    }
+
+    T operator*(const point& other) {
+        return x * other.x + y * other.y;
+    }
+
+    T operator^(const point& other) {
+        return x * other.y - y * other.x;
+    }
+
+    T length2() {
+        return x * x + y * y;
+    }
+
+    ld length() {
+        return sqrtl(length2());
+    }
+
+    bool operator==(const point& other) {
+        if (x == other.x && y == other.y) {
+            return true;
+        }
+        return false;
+    }
 };
 
-ll operator^(Point a, Point b){
-    return a.x * b.y - a.y * b.x;
+bool bad(point<ll> a, point<ll> b, point<ll> c) {
+    if (((b - a) ^ (c - b)) < 0) {
+        return false;
+    }
+    return true;
 }
 
-Point operator-(Point a, Point b){
-    Point c;
-    c.x = a.x - b.x;
-    c.y = a.y - b.y;
-    return c;
-}
+void solve() {
+    ll i, n, k, s;
+    point<ll> pp;
+    vector<point<ll>> p, ch;
 
-bool cmp(Point a, Point b){
-    return a.x > b.x;
-}
-
-vector<Point> lower_envelope_hull(vector<Point> &q){
-    ll n = q.size(), i, k = 0;
-    sort(q.begin(), q.end(), cmp);
-    vector<Point> st;
-    for(i = 0; i < n; i++){
-        while(k >= 2){
-            if(((q[i] - st[k - 1]) ^ (st[k - 2] - st[k - 1])) > 0){
-                st.pop_back();
-                k--;
-            }else{
-                break;
-            }
-        }
-        st.push_back(q[i]);
-        k++;
-    }
-    return st;
-}
-
-vector<Point> upper_envelope_hull(vector<Point> &q){
-    ll n = q.size(), i, k = 0;
-    sort(q.begin(), q.end(), cmp);
-    vector<Point> st;
-    for(i = 0; i < n; i++){
-        while(k >= 2){
-            if(((q[i] - st[k - 1]) ^ (st[k - 2] - st[k - 1])) < 0){
-                st.pop_back();
-                k--;
-            }else{
-                break;
-            }
-        }
-        st.push_back(q[i]);
-        k++;
-    }
-    return st;
-}
-
-vector<Point> build_convex_hull(const vector<Point> &p){
-    ll n = p.size(), i, a, b;
-    a = 0;
-    b = n - 1;
-    for(i = 0; i < n; i++){
-        if(p[i].x == p[a].x){
-            if(p[i].y < p[a].y){
-                a = i;
-            }
-        }
-        if(p[i].x < p[a].x){
-            a = i;
-        }
-        if(p[i].x == p[b].x){
-            if(p[i].y > p[b].y){
-                b = i;
-            }
-        }
-        if(p[i].x > p[b].x){
-            b = i;
-        }
-    }
-    vector<Point> upper, lower;
-    upper.push_back(p[a]);
-    lower.push_back(p[a]);
-    for(i = 0; i < n; i++){
-        if(((p[i] - p[a]) ^ (p[b] - p[a])) < 0){
-            upper.push_back(p[i]);
-        }
-        if(((p[i] - p[a]) ^ (p[b] - p[a])) > 0){
-            lower.push_back(p[i]);
-        }
-    }
-    upper.push_back(p[b]);
-    lower.push_back(p[b]);
-    vector<Point> lo = lower_envelope_hull(lower);
-    vector<Point> up = upper_envelope_hull(upper);
-    vector<Point> res;
-    for(auto pt : lo){
-        res.push_back(pt);
-    }
-    for(auto pt : up){
-        res.push_back(pt);
-    }
-    return res;
-}
-
-int main(){
-    input();
-    ll c, i, n, k;
     cin >> n;
-    vector<Point> p(n);
-    for(i = 0; i < n; i++){
+
+    p.resize(n);
+
+    for (i = 0; i < n; i++) {
         cin >> p[i].x >> p[i].y;
-        p[i].ind = i;
     }
-    vector<Point> unordered_convex_hull = build_convex_hull(p);
-    vector<bool> included(n, false);
-    for(Point pt : unordered_convex_hull){
-        included[pt.ind] = true;
+
+    sort(begin(p), end(p), [](point<ll>& p1, point<ll>& p2)->bool {
+         return (p1.y < p2.y);
+    });
+
+    pp = p[0];
+
+    sort(begin(p), end(p), [pp](point<ll>& p1, point<ll>& p2)->bool {
+         point<ll> v1, v2;
+
+         v1 = p1 - pp;
+         v2 = p2 - pp;
+
+         if ((v1 ^ v2) == 0) {
+            return (v1.length2() > v2.length2());
+         } else {
+             return ((v1 ^ v2) < 0);
+         }
+    });
+/*
+    cout << "SORTED\n";
+
+    for (i = 0; i < n; i++) {
+        cout << p[i].x << ' ' << p[i].y << '\n';
     }
-    k = 0;
-    vector<Point> convex_hull;
-    for(i = 0; i < n; i++){
-        if(included[i] == true){
-            k++;
-            convex_hull.push_back(p[i]);
+
+    cout << "\n";
+*/
+    ch.push_back(p[0]);
+    ch.push_back(p[1]);
+    k = 2;
+
+    for (i = 2; i < n; i++) {
+        while (k > 1 && bad(ch[k - 2], ch[k - 1], p[i])) {
+            ch.pop_back();
+            k--;
         }
+
+        ch.push_back(p[i]);
+        k++;
     }
-    cout << k << "\n";
-    for(i = 0; i < k; i++){
-        cout << convex_hull[i].x << " " << convex_hull[i].y << "\n";
+
+    while (k > 2 && bad(ch[k - 2], ch[k - 1], ch[0])) {
+        ch.pop_back();
+        k--;
     }
+
+    cout << k << '\n';
+
+    for (i = 0; i < k; i++) {
+        cout << ch[i].x << ' ' << ch[i].y << '\n';
+    }
+
+    s = 0;
+    for (i = 2; i < k ; i++) {
+        s += (ch[i - 1] - ch[0]) ^ (ch[i] - ch[0]);
+    }
+
+    cout << fixed;
+
+    cout.precision(18);
+
+    cout << (ld)abs(s) / 2.0;
+}
+
+int main() {
+ 
+    #ifndef LOCAL
+        INPUT;
+    #endif
+	
+    int t;
+ 
+    for (t = 1; t; t--) {
+        solve();
+    }
+ 
+    #ifdef LOCAL
+        cerr << '\n';
+        system("pause");
+    #endif
+ 
     return 0;
 }
