@@ -1,19 +1,39 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <string>
-#include <cmath>
-#include <set>
-#include <cstring>
-#include <deque>
+#include <sstream>
 #include <map>
+#include <set>
+#include <unordered_set>
+#include <unordered_map>
+#include <algorithm>
+#include <cmath>
+#include <deque>
+#include <fstream>
+#include <bitset>
+#include <random>
 
-#define iter vector<long long int>::iterator
-#define input() ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+#include <chrono>
+#include <cassert>
 
 using namespace std;
 
 typedef long long int ll;
+typedef long double ld;
+
+#define INF   1000000007
+#define INF64 1000000000000000003LL
+#define LMT   1000000
+#define INPUT ios::sync_with_stdio(false);cin.tie(0);
+
+#define FST   first
+#define SND   second
+
+#define MOD   998244353LL
+
+#ifdef LOCAL
+    #define cout cerr
+#endif
 
 struct mod_query{
 
@@ -135,28 +155,26 @@ struct SegTree{
 
 };
 
-int main(){
-    input();
-    ll n, q, i, t, l, r, x;
-    cin >> n >> q;
-    vector<ll> a(n);
-    for(i = 0; i < n; i++){
-        cin >> a[i];
+void solve() {
+    
+}
+
+int main() {
+
+#ifndef LOCAL
+    INPUT;
+#endif
+
+    int t;
+
+    for (t = 1; t; t--) {
+        solve();
     }
-    SegTree st = SegTree(n);
-    st.build(1, 0, n, a);
-    for(i = 0; i < q; i++){
-        cin >> t >> l >> r;
-        l--;
-        if(t == 1){
-            cin >> x;
-            st.add(1, 0, n, l, r, x);
-        }else if(t == 2){
-            cin >> x;
-            st.upd(1, 0, n, l, r, x);
-        }else{
-            cout << st.get(1, 0, n, l, r) << "\n";
-        }
-    }
+
+#ifdef LOCAL
+    cerr << '\n';
+    system("pause");
+#endif
+
     return 0;
 }
