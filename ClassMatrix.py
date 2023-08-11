@@ -30,20 +30,9 @@ class Matrix2D:
         for i in range(min(n, len(arr))):
             for j in range(min(m, len(arr[i]))):
                 self.matrix[i][j] = arr[i][j] % MOD
-
-    def unsafe_fill(self, arr):
-        n, m = self.size
-        for i in range(n):
-            for j in range(m):
-                self.matrix[i][j] = arr[i][j] % MOD
  
     def __add__(self, other):
-        if(self.size != other.size):
-            put("---error---")
-            put("can not Matrix(%d, %d) add to Matrix(%d, %d)" % (self.size[0], self.size[1], other.size[0], other.size[1]))
-            put("-----------")
-            return None
-        
+        assert(self.size == other.size)
         n, m = self.size
         for i in range(n):
             for j in range(m):
@@ -54,12 +43,7 @@ class Matrix2D:
     def __mul__(self, other):
         n, k1 = self.size
         k2, m = other.size
-        if(k1 != k2):
-            put("---error---")
-            put("cant Matrix(%d, %d) multiply by Matrix(%d, %d)" % (self.size[0], self.size[1], other.size[0], other.size[1]))
-            put("-----------")
-            return None
-        
+        assert(k1 == k2)
         c = Matrix2D(n, m)
         for i in range(n):
             for j in range(m):
