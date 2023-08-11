@@ -32,7 +32,7 @@ typedef long double ld;
 #define MOD   998244353LL
 
 #ifdef LOCAL
-#define cout cerr
+    #define cout cerr
 #endif
 
 struct big_integer {
