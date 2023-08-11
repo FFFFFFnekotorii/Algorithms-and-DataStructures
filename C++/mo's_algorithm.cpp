@@ -239,6 +239,7 @@ void solve() {
     
     for (i = 0; i < m; i++) {
         cin >> lb >> rb;
+        //segments [lb; rb], NOT [lb; rb)
         lb--, rb--;
          
         q.insert(lb, rb, i);
