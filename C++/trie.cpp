@@ -35,48 +35,83 @@ typedef long double ld;
     #define cout cerr
 #endif
 
+template<int alphabet_size, int default_value = 0>
 struct trie {
     vector<vector<int>> to;
 	vector<int> term;
 	int free_ind;
 	
 	trie() {
-		to.push_back(vector<int>(10, -1));
-		term.push_back(-1);
+		to.push_back(vector<int>(alphabet_size, -1));
+		term.push_back(default_value);
 		
 		free_ind = 1;
 	}
 	
-	void add(string& s, int x) {
+	void add(vector<int>& word, int x) {
 		int cur;
 		
 		cur = 0;
-		for (char c : s) {
-			if (to[cur][c - '0'] == -1) {
-				to[cur][c - '0'] = free_ind++;
-				to.push_back(vector<int>(10, -1));
-				term.push_back(-1);
+		for (int& c : word) {
+			if (to[cur][c] == -1) {
+				to[cur][c] = free_ind++;
+				to.push_back(vector<int>(alphabet_size, -1));
+				term.push_back(default_value);
 			}
-			cur = to[cur][c - '0'];
+			cur = to[cur][c];
 		}
 		term[cur] = x;
 	}
 	
-	int find(string& s) {
+	int find(vector<int>& word) {
 		int cur;
 		
 		cur = 0;
-		for (char c : s) {
-			if (to[cur][c - '0'] == -1) {
+		for (int& c : word) {
+			if (to[cur][c] == -1) {
 				return 0;
 			}
-			cur = to[cur][c - '0'];
+			cur = to[cur][c];
+		}
+		return term[cur];
+	}
+	
+	int& operator[](vector<int>& word) {
+		int cur;
+		
+		cur = 0;
+		for (int& c : word) {
+			if (to[cur][c] == -1) {
+				to[cur][c] = free_ind++;
+				to.push_back(vector<int>(alphabet_size, -1));
+				term.push_back(default_value);
+			}
+			cur = to[cur][c];
 		}
 		return term[cur];
 	}
 };
 
 void solve() {
+	
+	trie<10> t;
+	vector<int> s;
+	
+	s = {4, 5};
+	
+	//add, find
+	
+	t.add(s, 727);
+	
+	cout << t.find(s) << '\n';
+	
+	//operator[]
+	
+	cout << t[s] << '\n';
+	
+	t[s] = 1337;
+	
+	cout << t[s] << '\n';
 	
 }
 
