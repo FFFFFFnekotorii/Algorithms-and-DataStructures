@@ -78,9 +78,11 @@ struct trie {
 	
 	int& operator[](vector<int>& word) {
 		//creates nodes in any case
+		//***
 		//trie<cnst> t;
 		//t[{1, 3, 3, 7}] = 1
 		//int v = t[{1, 0, 0, 0, 0, 0, 0, 0, 0, 7}];
+		//***
 		//creates 2 two words and 14 nodes correspondingly
 		int cur;
 		
