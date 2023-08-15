@@ -83,7 +83,7 @@ struct trie {
 		//t[{1, 3, 3, 7}] = 1
 		//int v = t[{1, 0, 0, 0, 0, 0, 0, 0, 0, 7}];
 		//***
-		//creates 2 two words and 14 nodes correspondingly
+		//creates 2 words and 14 nodes correspondingly
 		int cur;
 		
 		cur = 0;
