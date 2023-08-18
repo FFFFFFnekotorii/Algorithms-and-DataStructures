@@ -35,7 +35,7 @@ typedef long double ld;
     #define cout cerr
 #endif
 
-template<int base, int mod>
+template<ll base, ll mod>
 struct hash_string {
     vector<ll> base_power, prefix_hash;
 
