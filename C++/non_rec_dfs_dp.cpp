@@ -95,6 +95,7 @@ void dfs(vector<vector<pair<int, int>>>& g, int s, vector<double>& dp, vector<in
 			//</init vertex for the first time>
 			
 			st.push_back(u);
+			break;
 		}
 		
 		if (!added) {
