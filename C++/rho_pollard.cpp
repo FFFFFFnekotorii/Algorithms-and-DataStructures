@@ -37,129 +37,77 @@ const long long   INF64 = 1000000000000000003LL;
 const int         MOD   = 998244353;
 const long double PI    = atan2l(0, -1);
 
-namespace debug {
-
-	template<typename T1, typename T2>
-	void print(const pair<T1, T2> &a) {
-		cout << "PAIR{";
-		cout << a.first << ", ";
-		cout << a.second << "} ";
-	}
-
-	template<typename T>
-	void print(T n) {
-		cout << n << ' ';
-	}
-
-	template<typename T>
-	void println(const vector<T> &a, string msg) {
-		cout << msg << ' ';
-		for (const T &elem : a) {
-			print(elem);
-		}
-		cout << '\n';
-	}
-}
-
-template<typename T>
-T read() { T v; cin >> v; return v; }
-
-ll isqrt(ll n) {
-    ll k = sqrt(n);
-    k += 1;
-
-    while (k * k > n) {
-        k--;
+namespace factorization {
+    ll isqrt(ll n) {
+        ll k = sqrt(n) + 1;
+        while (k * k > n) k--;
+        return k;
     }
 
-    return k;
-}
-
-ll modadd(ll a, ll b, ll m) {
-    ll res = a + b;
-    if (res >= m) {
-        res -= m;
+    ll modadd(ll a, ll b, ll m) {
+        ll res = a + b;
+        if (res >= m) res -= m;
+        return res;
     }
-    return res;
-}
 
-ll modmul(ll a, ll b, ll m) {
-    __int128 x = a, y = b, z = m;
-    return (ll)((x * y) % z);
-}
+    ll modmul(ll a, ll b, ll m) {
+        __int128 x = a, y = b, z = m;
+        return (ll)((x * y) % z);
+    }
 
-ll rho_pollard(ll n, ll c, ll seed) {
+    ll rho_pollard(ll n, ll c, ll seed) {
+        ll x = seed, y = seed, d = 1;
 
-    ll x, y;
+        auto f = [c, n](ll w) -> ll { return modadd(modmul(w, w, n), c, n); };
 
-    auto f = [c, n](ll w) -> ll {
-        return modadd(modmul(w, w, n), c, n);
-    };
+        int lmt = min(isqrt(isqrt(n)) + 10, 45000LL);
 
-    x = seed;
-    y = seed;
+        for (int i = 0; i < lmt; i++) {
+            x = f(x), y = f(f(y));
 
-    int lmt = min(isqrt(isqrt(n)) + 10, 45000LL);
-    ll d = 1;
-
-    for (int i = 0; i < lmt; i++) {
-        x = f(x);
-        y = f(f(y));
-
-        d = modmul(d, abs(x - y), n);
-        if (i & 31) {
-            d = __gcd(d, n);
-            if (1 < d && d < n) {
-                return d;
+            d = modmul(d, abs(x - y), n);
+            if (i & 31) {
+                d = __gcd(d, n);
+                if (1 < d && d < n) { return d; }
+                d = 1;
             }
-            d = 1;
         }
-    }
-    d = __gcd(d, n);
-    if (1 < d && d < n) {
-        return d;
+        d = __gcd(d, n);
+        if (1 < d && d < n) { return d; }
+
+        return n;
     }
 
-    return n;
-}
-
-bool is_prime(ll n) {
-    return false;
-}
-
-void factorize_impl(ll n, vector<ll> &pf) {
-    if (n == 1) {
-        return ;
+    bool is_prime(ll n) {
+        return false;
     }
-    if (is_prime(n)) {
+
+    void factorize_impl(ll n, vector<ll> &pf) {
+        if (n == 1) { return ; }
+        if (is_prime(n)) { pf.push_back(n); return ; }
+
+        mt19937_64 rnd(time(NULL));
+        uniform_int_distribution<ll> uid(0, n - 1);
+
+        for (ll c : {2, 1, -1}) {
+            for (int i = 0; i < 7; i++) {
+                ll d = rho_pollard(n, c, uid(rnd));
+
+                if (1 < d && d < n) {
+                    factorize_impl(d, pf); factorize_impl(n / d, pf);
+                    return ;
+                }
+            }
+        }
         pf.push_back(n);
-        return ;
     }
 
-    mt19937_64 rnd(time(NULL));
-    uniform_int_distribution<ll> uid(0, n - 1);
-
-    for (ll c : {2, 1, -1}) {
-        for (int i = 0; i < 7; i++) {
-            ll d = rho_pollard(n, c, uid(rnd));
-
-            if (1 < d && d < n) {
-                factorize_impl(d, pf);
-                factorize_impl(n / d, pf);
-                return ;
-            }
+    void factorize(ll n, vector<ll> &pf) {
+        while (!(n & 1)) {
+            n /= 2; pf.push_back(2);
         }
+        factorize_impl(n, pf);
     }
-
-    pf.push_back(n);
-}
-
-void factorize(ll n, vector<ll> &pf) {
-    while (!(n & 1)) {
-        n /= 2;
-        pf.push_back(2);
-    }
-    factorize_impl(n, pf);
 }
 
 void solve() {
@@ -170,7 +118,7 @@ void solve() {
 
     cin >> n;
 
-    factorize(n, pf);
+    factorization::factorize(n, pf);
 
     sort(begin(pf), end(pf));
 
